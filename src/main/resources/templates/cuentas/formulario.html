@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>Sistema Bancario | Formulario de Cuenta</title>
+  <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+  <div class="content-wrapper" style="margin-left: 0;">
+    <section class="content-header">
+      <div class="container-fluid">
+        <h1>Gestión de Cuentas</h1>
+      </div>
+    </section>
+
+    <section class="content">
+      <div class="container-fluid">
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Información del Titular</h3>
+          </div>
+
+          <form th:action="@{/cuentas/guardar}" th:object="${cuenta}" method="post">
+            <input type="hidden" th:field="*{id}">
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Nombre del Titular</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                      </div>
+                      <input type="text" th:field="*{titular}" class="form-control"
+                             placeholder="Ej. Luis Daniel Delgado" required>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Tipo de Cuenta</label>
+                    <select class="form-control" th:field="*{tipo_cuenta}">
+                      <option value="Ahorro">Ahorro</option>
+                      <option value="Corriente">Corriente</option>
+                      <option value="Nómina">Nómina</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Saldo Inicial</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                      </div>
+                      <input type="number" step="0.01" th:field="*{saldo}"
+                             class="form-control" placeholder="0.00" required>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer text-right">
+              <a th:href="@{/cuentas}" class="btn btn-default">
+                <i class="fas fa-arrow-left"></i> Regresar
+              </a>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Guardar Cuenta
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script src="/plugins/jquery/jquery.min.js"></script>
+<script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

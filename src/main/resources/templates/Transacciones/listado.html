@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>SAES | Realizar Transferencia</title>
+    <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <div class="content-wrapper" style="margin-left: 0;"> <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Nueva Transferencia</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <section class="content">
+            <div class="container-fluid">
+                <div class="card card-success">
+                    <div class="card-header">
+                        <h3 class="card-title">Datos del Movimiento</h3>
+                    </div>
+
+                    <form th:action="@{/transacciones/transferir}" method="post">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Cuenta de Origen</label>
+                                        <select name="idOrigen" class="form-control" required>
+                                            <option value="" disabled selected>Seleccione la cuenta...</option>
+                                            <option th:each="cta : ${cuentas}"
+                                                    th:value="${cta.id_cuenta}"
+                                                    th:text="${cta.titular + ' (Saldo: $' + cta.saldo + ')'}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Cuenta de Destino</label>
+                                        <select name="idDestino" class="form-control" required>
+                                            <option value="" disabled selected>Seleccione la cuenta que recibe...</option>
+                                            <option th:each="cta : ${cuentas}"
+                                                    th:value="${cta.id_cuenta}"
+                                                    th:text="${cta.titular}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="monto">Monto a Transferir</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                            </div>
+                                            <input type="number" name="monto" id="monto" step="0.01"
+                                                   class="form-control" placeholder="0.00" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer text-right">
+                            <a th:href="@{/cuentas}" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-exchange-alt"></i> Ejecutar Transferencia
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script src="/plugins/jquery/jquery.min.js"></script>
+<script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
