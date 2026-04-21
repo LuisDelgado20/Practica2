@@ -53,6 +53,7 @@ public class EstadisticasController {
 
         model.addAttribute("usuarioLogueado", nombreLogueado);
         // Asegúrate de que esta ruta coincida con la ubicación de tu archivo .html
+        // Cambia la línea 56 de tu código para que sea exactamente así:
         return "Transacciones/estadisticas";
     }
 }
