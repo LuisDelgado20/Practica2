@@ -38,7 +38,7 @@ public class AuthController {
         } else {
 
             model.addAttribute("error", "Usuario o contraseña incorrectos");
-            return "auth/login";
+            return "/auth/login";
         }
     }
 
@@ -65,7 +65,7 @@ public class AuthController {
 
     @GetMapping("/forgot-password")
     public String forgotPassword() {
-        return "auth/forgot-password";
+        return "/auth/forgot-password";
     }
 
     @PostMapping("/recuperar")
@@ -85,7 +85,7 @@ public class AuthController {
 
     @GetMapping("/recover-password")
     public String recoverPassword() {
-        return "auth/recover-password";
+        return "/auth/recover-password";
     }
 
     @PostMapping("/actualizar-password")
