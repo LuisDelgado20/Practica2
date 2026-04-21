@@ -38,7 +38,7 @@ public class AuthController {
         } else {
 
             model.addAttribute("error", "Usuario o contraseña incorrectos");
-            return "/auth/login";
+            return "auth/login";
         }
     }
 
@@ -88,7 +88,7 @@ public class AuthController {
         return "/auth/recover-password";
     }
 
-    @PostMapping("/actualizar-password")
+    @PostMapping("/recover-password")
     public String actualizarPassword(@RequestParam String email, @RequestParam String password) {
         Cuenta cuenta = cuentaService.buscarPorEmail(email);
         if (cuenta != null) {

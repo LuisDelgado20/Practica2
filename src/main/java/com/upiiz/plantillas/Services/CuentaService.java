@@ -24,9 +24,10 @@ public class CuentaService {
         cuentaRepository.deleteById(id);
     }
 
-    public boolean validarCredenciales(String titular, String password) {
-        return cuentaRepository.findByEmailAndPassword(titular, password).isPresent();
+    public boolean validarCredenciales(String email, String password) {
+        return cuentaRepository.findByEmailAndPassword(email, password).isPresent();
     }
+
     public Cuenta buscarPorEmail(String email) {
         return cuentaRepository.findByEmail(email).orElse(null);
     }
@@ -34,24 +35,24 @@ public class CuentaService {
     public Cuenta buscarPorId(Long id) {
         return cuentaRepository.findById(id).orElse(null);
     }
+
     @Transactional
     public void transferir(Long idOrigen, Long idDestino, Double monto) {
         Cuenta origen = buscarPorId(idOrigen);
         Cuenta destino = buscarPorId(idDestino);
 
         if (origen != null && destino != null && origen.getSaldo().doubleValue() >= monto) {
-
             origen.setSaldo(origen.getSaldo().subtract(java.math.BigDecimal.valueOf(monto)));
             destino.setSaldo(destino.getSaldo().add(java.math.BigDecimal.valueOf(monto)));
-
             cuentaRepository.save(origen);
             cuentaRepository.save(destino);
         }
     }
 
+    // CORRECCIÓN: Ahora maneja la lista que viene del repositorio
     public Cuenta buscarPorTitular(String titular) {
-        // Asumiendo que usas JPA, el repositorio debería tener este método
-        return cuentaRepository.findByTitular(titular);
+        List<Cuenta> cuentas = cuentaRepository.findByTitular(titular);
+        // Si hay cuentas, devolvemos la primera para evitar que la vista falle
+        return cuentas.isEmpty() ? null : cuentas.get(0);
     }
-
 }
