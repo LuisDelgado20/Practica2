@@ -34,20 +34,25 @@ public class EstadisticasController {
             List<Movimiento> misMovimientos = movimientoService.buscarPorCuentaId(cuentaUsuario.getId());
 
             double entradas = misMovimientos.stream()
-                    .filter(m -> m.getTipo().equalsIgnoreCase("Entrada"))
+                    .filter(m -> m.getTipo().equalsIgnoreCase("Entrada") || m.getTipo().equalsIgnoreCase("Depósito"))
                     .mapToDouble(m -> m.getMonto().doubleValue()).sum();
 
             double salidas = misMovimientos.stream()
-                    .filter(m -> m.getTipo().equalsIgnoreCase("Salida"))
+                    .filter(m -> m.getTipo().equalsIgnoreCase("Salida") || m.getTipo().equalsIgnoreCase("Retiro"))
                     .mapToDouble(m -> m.getMonto().doubleValue()).sum();
 
             model.addAttribute("movimientos", misMovimientos);
             model.addAttribute("totalEntradas", entradas);
             model.addAttribute("totalSalidas", salidas);
             model.addAttribute("saldoActual", cuentaUsuario.getSaldo());
-            model.addAttribute("usuarioLogueado", nombreLogueado);
+        } else {
+            model.addAttribute("totalEntradas", 0);
+            model.addAttribute("totalSalidas", 0);
+            model.addAttribute("movimientos", List.of());
         }
 
-        return "/Transacciones/estadisticas";
+        model.addAttribute("usuarioLogueado", nombreLogueado);
+        // Asegúrate de que esta ruta coincida con la ubicación de tu archivo .html
+        return "Transacciones/estadisticas";
     }
 }

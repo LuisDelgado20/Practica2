@@ -3,63 +3,26 @@
 <head>
     <meta charset="utf-8">
     <title>Sistema X | Estadísticas</title>
-    <link rel="stylesheet" href="/dist/css/adminlte.min.css">
-    <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/dist/css/adminlte.min.css}">
+    <link rel="stylesheet" th:href="@{/plugins/fontawesome-free/css/all.min.css}">
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
-
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <span class="nav-link"><i class="fas fa-user"></i> <span th:text="${usuarioLogueado}"></span></span>
-            </li>
-        </ul>
-    </nav>
-
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
-        <div class="sidebar">
-            <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column" role="menu">
-                    <li class="nav-item"><a th:href="@{/auth/login}" class="nav-link"><p>Inicio</p></a></li>
-                    <li class="nav-item"><a th:href="@{/cuentas}" class="nav-link"><p>Cuentas</p></a></li>
-                    <li class="nav-item"><a th:href="@{/transacciones}" class="nav-link"><p>Transacciones</p></a></li>
-                    <li class="nav-item"><a th:href="@{/estadisticas}" class="nav-link active"><p>Estadísticas</p></a></li>
-                    <li class="nav-item"><a th:href="@{/auth/login}" class="nav-link"><p>Salir</p></a></li>
-                </ul>
-            </nav>
-        </div>
-    </aside>
-
     <div class="content-wrapper">
-        <section class="content-header"><h1>Estadísticas del Sistema</h1></section>
+        <section class="content-header"><h1>Estadísticas de mi Cuenta</h1></section>
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="card card-danger">
-                            <div class="card-header"><h3 class="card-title">Donut Chart</h3></div>
-                            <div class="card-body"><canvas id="donutChart" style="min-height: 250px;"></canvas></div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card card-success">
-                            <div class="card-header"><h3 class="card-title">Bar Chart</h3></div>
-                            <div class="card-body"><canvas id="barChart" style="min-height: 250px;"></canvas></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card card-danger">
-                            <div class="card-header"><h3 class="card-title">Pie Chart</h3></div>
+                        <div class="card card-primary">
+                            <div class="card-header"><h3 class="card-title">Resumen de Movimientos (Montos)</h3></div>
                             <div class="card-body"><canvas id="pieChart" style="min-height: 250px;"></canvas></div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="card card-success">
-                            <div class="card-header"><h3 class="card-title">Stacked Bar Chart</h3></div>
-                            <div class="card-body"><canvas id="stackedBarChart" style="min-height: 250px;"></canvas></div>
+                            <div class="card-header"><h3 class="card-title">Comparativa Entradas/Salidas</h3></div>
+                            <div class="card-body"><canvas id="barChart" style="min-height: 250px;"></canvas></div>
                         </div>
                     </div>
                 </div>
@@ -68,23 +31,52 @@
     </div>
 </div>
 
-<script src="/plugins/jquery/jquery.min.js"></script>
-<script src="/plugins/chart.js/Chart.min.js"></script>
+<script th:src="@{/plugins/jquery/jquery.min.js}"></script>
+<script th:src="@{/plugins/chart.js/Chart.min.js}"></script>
 
-<script>
+<script th:inline="javascript">
     $(function () {
-      // Ejemplo de configuración para la gráfica de Pastel (Pie Chart)
+      // 1. Extraer datos del modelo de Spring
+      var totalEntradas = /*[[${totalEntradas}]]*/ 0;
+      var totalSalidas = /*[[${totalSalidas}]]*/ 0;
+
+      // 2. PIE CHART - Comparación porcentual
       var pieData = {
-        labels: ['Chrome', 'IE', 'FireFox', 'Safari', 'Opera'],
+        labels: ['Entradas', 'Salidas'],
         datasets: [{
-          data: [700, 500, 400, 600, 300],
-          backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc'],
+          data: [totalEntradas, totalSalidas],
+          backgroundColor: ['#00a65a', '#f56954'],
         }]
       }
       var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
-      new Chart(pieChartCanvas, { type: 'pie', data: pieData })
+      new Chart(pieChartCanvas, {
+          type: 'pie',
+          data: pieData,
+          options: { responsive: true, maintainAspectRatio: false }
+      })
 
-      // Aquí repetirías la lógica para Donut, Bar y Stacked Bar siguiendo la documentación de AdminLTE
+      // 3. BAR CHART - Comparación visual
+      var barData = {
+        labels: ['Movimientos'],
+        datasets: [
+          {
+            label: 'Entradas',
+            backgroundColor: '#00a65a',
+            data: [totalEntradas]
+          },
+          {
+            label: 'Salidas',
+            backgroundColor: '#f56954',
+            data: [totalSalidas]
+          }
+        ]
+      }
+      var barChartCanvas = $('#barChart').get(0).getContext('2d')
+      new Chart(barChartCanvas, {
+          type: 'bar',
+          data: barData,
+          options: { responsive: true, maintainAspectRatio: false }
+      })
     })
 </script>
 </body>
