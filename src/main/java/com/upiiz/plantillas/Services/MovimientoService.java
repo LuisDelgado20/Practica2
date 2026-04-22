@@ -15,4 +15,7 @@ public class MovimientoService{ // En MovimientoService.java
         // 2. Usamos la variable en minúsculas (la instancia), NO la clase con Mayúscula
         return movimientoRepository.findByCuentaId(id);
     }
+    public void guardar(Movimiento movimiento) {
+        movimientoRepository.save(movimiento);
+    }
 }

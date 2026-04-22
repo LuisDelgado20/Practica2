@@ -20,40 +20,35 @@ public class EstadisticasController {
 
     @Autowired
     private MovimientoService movimientoService;
+
     @GetMapping("/estadisticas")
     public String mostrarEstadisticas(Model model, HttpSession session) {
         String nombreLogueado = (String) session.getAttribute("usuarioLogueado");
-
-        if (nombreLogueado == null) {
-            return "redirect:/auth/login";
-        }
+        if (nombreLogueado == null) return "redirect:/auth/login";
 
         Cuenta cuentaUsuario = cuentaService.buscarPorTitular(nombreLogueado);
+        double entradas = 0;
+        double salidas = 0;
 
         if (cuentaUsuario != null) {
             List<Movimiento> misMovimientos = movimientoService.buscarPorCuentaId(cuentaUsuario.getId());
 
-            double entradas = misMovimientos.stream()
-                    .filter(m -> m.getTipo().equalsIgnoreCase("Entrada") || m.getTipo().equalsIgnoreCase("Depósito"))
+            entradas = misMovimientos.stream()
+                    .filter(m -> m.getTipo().equalsIgnoreCase("Depósito"))
                     .mapToDouble(m -> m.getMonto().doubleValue()).sum();
 
-            double salidas = misMovimientos.stream()
-                    .filter(m -> m.getTipo().equalsIgnoreCase("Salida") || m.getTipo().equalsIgnoreCase("Retiro"))
+            salidas = misMovimientos.stream()
+                    .filter(m -> m.getTipo().equalsIgnoreCase("Retiro"))
                     .mapToDouble(m -> m.getMonto().doubleValue()).sum();
 
             model.addAttribute("movimientos", misMovimientos);
-            model.addAttribute("totalEntradas", entradas);
-            model.addAttribute("totalSalidas", salidas);
             model.addAttribute("saldoActual", cuentaUsuario.getSaldo());
-        } else {
-            model.addAttribute("totalEntradas", 0);
-            model.addAttribute("totalSalidas", 0);
-            model.addAttribute("movimientos", List.of());
         }
 
+        model.addAttribute("totalEntradas", entradas);
+        model.addAttribute("totalSalidas", salidas);
         model.addAttribute("usuarioLogueado", nombreLogueado);
-        // Asegúrate de que esta ruta coincida con la ubicación de tu archivo .html
-        // Cambia la línea 56 de tu código para que sea exactamente así:
-        return "Transacciones/estadisticas";
+
+        return "transacciones/estadisticas";
     }
 }

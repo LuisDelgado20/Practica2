@@ -5,10 +5,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "movimiento")
+@Table(name = "transacciones")
 public class Movimiento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
     private String descripcion;
     private String tipo;
@@ -16,7 +17,7 @@ public class Movimiento {
     private LocalDate fecha;
 
     @ManyToOne
-    @JoinColumn(name = "cuenta_id", nullable = false)
+    @JoinColumn(name = "id_cuenta")
     private Cuenta cuenta;
 
     // Constructores

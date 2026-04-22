@@ -48,11 +48,24 @@ public class CuentaController {
     }
 
     @PostMapping("/guardar")
-    public String guardar(@ModelAttribute Cuenta cuenta) {
+    public String guardar(@ModelAttribute("cuenta") Cuenta cuenta) {
+        // 1. Usamos getId() porque así se llama en tu entidad Cuenta
+        if (cuenta.getId() != null && (cuenta.getPassword() == null || cuenta.getPassword().isEmpty())) {
+            // Recuperamos la cuenta existente para no perder la contraseña anterior
+            Cuenta cuentaExistente = cuentaService.buscarPorId(cuenta.getId());
+            if (cuentaExistente != null) {
+                cuenta.setPassword(cuentaExistente.getPassword());
+            }
+        }
+
+        // 2. Validación de seguridad para evitar que MySQL lance el error de 'password cannot be null'
+        if (cuenta.getPassword() == null || cuenta.getPassword().isEmpty()) {
+            cuenta.setPassword("12345"); // Contraseña temporal
+        }
+
         cuentaService.guardar(cuenta);
         return "redirect:/cuentas";
     }
-
     @GetMapping("/eliminar/{id}")
     public String eliminar(@PathVariable Long id) {
         cuentaService.eliminar(id);

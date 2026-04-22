@@ -1,9 +1,12 @@
 package com.upiiz.plantillas.Controllers;
 
+import com.upiiz.plantillas.Services.MovimientoService;
 import com.upiiz.plantillas.entities.Cuenta;
+import com.upiiz.plantillas.entities.Movimiento;
 import com.upiiz.plantillas.entities.Transaccion;
 import com.upiiz.plantillas.Services.CuentaService;
 import com.upiiz.plantillas.Services.TransaccionService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,53 +15,36 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/transacciones")
+@RequestMapping("/transacciones") // Todas las rutas aquí empiezan con /transacciones
 public class TransaccionController {
+
     @Autowired
-    private TransaccionService transaccionService;
+    private MovimientoService movimientoService; // Asegúrate de usar el servicio que guarda 'Movimiento'
 
     @Autowired
     private CuentaService cuentaService;
 
-    // 1. Listado de transacciones
-    @GetMapping
-    public String listar(Model model) {
-        model.addAttribute("transacciones", transaccionService.listarTodas());
-        model.addAttribute("usuarioLogueado", "Luis Daniel");
-        return "transacciones/listado";
-    }
-
-    // 2. Formulario para registro INDIVIDUAL de transacción
-    // Acceso: /transacciones/nuevo
+    // Ruta final: /transacciones/nuevo
     @GetMapping("/nuevo")
-    public String mostrarFormulario(Model model) {
-        model.addAttribute("cuentas", cuentaService.listarTodas());
-        model.addAttribute("transaccion", new Transaccion());
-        model.addAttribute("usuarioLogueado", "Luis Daniel");
+    public String mostrarFormulario(Model model, HttpSession session) {
+        String nombreLogueado = (String) session.getAttribute("usuarioLogueado");
+
+        // Inicialización crucial para evitar el error 500
+        Movimiento movimiento = new Movimiento();
+        movimiento.setCuenta(new Cuenta());
+        movimiento.setFecha(java.time.LocalDate.now());
+
+        model.addAttribute("movimiento", movimiento);
+        model.addAttribute("cuentas", cuentaService.obtenerTodas());
+        model.addAttribute("usuarioLogueado", nombreLogueado != null ? nombreLogueado : "Usuario");
+
         return "transacciones/formulario";
     }
 
-    // 3. Guardar transacción individual
     @PostMapping("/guardar")
-    public String guardar(@ModelAttribute Transaccion transaccion) {
-        transaccionService.guardar(transaccion);
-        return "redirect:/transacciones";
-    }
-
-    // 4. Procesa la transferencia entre dos cuentas
-    // Acceso: /transacciones/transferir
-    @PostMapping("/transferir")
-    public String realizarTransferencia(@RequestParam Long idOrigen,
-                                        @RequestParam Long idDestino,
-                                        @RequestParam Double monto) {
-        cuentaService.transferir(idOrigen, idDestino, monto);
-        return "redirect:/cuentas";
-    }
-
-    // 5. Estadísticas
-    @GetMapping("/estadisticas")
-    public String verEstadisticas(Model model) {
-        model.addAttribute("cuentas", cuentaService.listarTodas());
-        return "transacciones/estadisticas";
+    public String guardar(@ModelAttribute("movimiento") Movimiento movimiento) {
+        // Guardamos el movimiento usando el servicio correspondiente
+        movimientoService.guardar(movimiento);
+        return "redirect:/estadisticas"; // Redirigimos a estadísticas para ver el cambio en la gráfica
     }
 }

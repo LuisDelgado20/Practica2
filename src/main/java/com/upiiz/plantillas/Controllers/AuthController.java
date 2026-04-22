@@ -75,7 +75,7 @@ public class AuthController {
             mensaje.setFrom("chavocholuisdaniel7@gmail.com");
             mensaje.setTo(email);
             mensaje.setSubject("Recuperación de Contraseña - SAES");
-            mensaje.setText("Restablece tu contraseña aquí: http://localhost:8081/auth/recover-password?email=" + email);
+            mensaje.setText("Restablece tu contraseña aquí: https://practica2-3kri.onrender.com/auth/recover-password?email=" + email);
             mailSender.send(mensaje);
             return "redirect:/auth/forgot-password?success";
         } catch (Exception e) {

@@ -27,8 +27,8 @@
     <div class="mb-3">
         <a th:href="@{/auth/login}" class="btn btn-primary">login</a>
         <a th:href="@{/cuentas/nueva}" class="btn btn-primary">Agregar Cuenta</a>
-        <a th:href="@{/Transacciones/nuevo}" class="btn btn-success">Realizar Transferencia</a>
-        <a th:href="@{/Transacciones/estadisticas}" class="btn btn-info">Ver Estadísticas</a>
+        <a th:href="@{/transacciones/nuevo}" class="btn btn-success">Realizar Transferencia</a>
+        <a th:href="@{/estadisticas}" class="btn btn-info">Ver Estadísticas</a>
     </div>
 
     <table class="table table-bordered table-striped table-hover mt-3">
@@ -36,6 +36,7 @@
         <tr>
             <th style="width: 50px;">ID</th>
             <th>Titular de la Cuenta</th>
+            <th>Tipo de Cuenta</th>
             <th>Saldo Actual</th>
             <th class="text-center" style="width: 200px;">Acciones</th>
         </tr>
@@ -44,6 +45,7 @@
         <tr th:each="cuenta : ${cuentas}">
             <td th:text="${cuenta.id}" class="font-weight-bold"></td>
             <td th:text="${cuenta.titular}"></td>
+            <td th:text="${cuenta.tipo_cuenta}"></td>
             <td th:text="${'$' + cuenta.saldo}"></td>
             <td class="text-center">
                 <div class="btn-group" role="group">

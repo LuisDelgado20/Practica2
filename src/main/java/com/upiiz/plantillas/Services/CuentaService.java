@@ -55,4 +55,13 @@ public class CuentaService {
         // Si hay cuentas, devolvemos la primera para evitar que la vista falle
         return cuentas.isEmpty() ? null : cuentas.get(0);
     }
+    // Agrega este método
+    public List<Cuenta> obtenerTodas() {
+        return cuentaRepository.findAll();
+    }
+
+
+    public Cuenta obtenerPorId(Long id) {
+        return cuentaRepository.findById(id).orElse(null);
+    }
 }

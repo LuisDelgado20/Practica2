@@ -25,6 +25,12 @@
 
           <form th:action="@{/cuentas/guardar}" th:object="${cuenta}" method="post">
             <input type="hidden" th:field="*{id}">
+            <div class="form-group">
+              <label for="email">Correo Electrónico</label>
+              <input type="email" class="form-control" id="email"
+                     th:field="*{email}" placeholder="ejemplo@correo.com" required>
+            </div>
+
 
             <div class="card-body">
               <div class="row">
